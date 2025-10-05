@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const VITE_LOCAL_API = "https://localhost:8080/api/";
+const VITE_LOCAL_API = "https://localhost:8080/api";
 
 const api = axios.create({
   baseURL: VITE_LOCAL_API,

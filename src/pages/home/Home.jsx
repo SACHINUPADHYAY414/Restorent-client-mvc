@@ -6,7 +6,7 @@ import { COMPANY_LOCATION, COMPANY_NAME } from "../../utills/string";
 import About from "../about/About";
 import Menu from "../menu/Menu";
 import Event from "../event/Event.jsx";
-import Testimonial from "../testimonial/testimonial.jsx";
+import Testimonial from "../testimonial/Testimonial.jsx";
 import Gallery from "../gallery/Gallery.jsx";
 import api from "../../components/action/Api.js";
 
