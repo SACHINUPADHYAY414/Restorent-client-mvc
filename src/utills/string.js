@@ -1,4 +1,4 @@
-export const COMPANY_NAME="Restro"
+export const COMPANY_NAME="RestroHub"
 export const COMPANY_NUMBER="+1 5589 55488 55"
 export const COMPANY_EMAIL="contact@restro.com"
 export const COMPANY_LOCATION="Hydrabad"

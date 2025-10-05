@@ -11,7 +11,7 @@ const PageNotFound = () => {
   return (
     <div
       className="d-flex flex-column justify-content-center align-items-center"
-      style={{ minHeight: "44.6vh", padding: "4rem", textAlign: "center" }}
+      style={{ minHeight: "50.2vh", padding: "4rem", textAlign: "center" }}
     >
       <h1>404 - Page Not Found</h1>
       <p>Sorry, the page you are looking for does not exist.</p>
