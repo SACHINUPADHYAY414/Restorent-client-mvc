@@ -9,13 +9,16 @@ import "bootstrap/dist/js/bootstrap.bundle.js";
 import "swiper/css";
 import "swiper/css/pagination";
 import '@fortawesome/fontawesome-free/css/all.min.css';
-
-// import { ToastrProvider } from "./Components/Toastr/ToastrProvider.jsx";
+import { ToastrProvider } from "./components/toast/Toast";
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+import "animate.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <ToastrProvider>
+        <App />
+      </ToastrProvider>
     </Provider>
   </React.StrictMode>
 );

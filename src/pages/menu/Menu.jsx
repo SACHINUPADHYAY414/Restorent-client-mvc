@@ -117,7 +117,6 @@ const Menu = () => {
       try {
         window?.loadingStart?.();
         const response = await api.fetch("/menu");
-
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

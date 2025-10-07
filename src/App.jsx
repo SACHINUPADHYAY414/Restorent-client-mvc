@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useLocation,
+  useLocation
 } from "react-router-dom";
 
 import Layout from "./components/layout/Layout";
@@ -15,6 +15,9 @@ import Event from "./pages/event/Event";
 import PageNotFound from "./pages/pageNotFound/PageNotFound";
 import Gallery from "./pages/gallery/Gallery";
 import Testimonial from "./pages/testimonial/Testimonial";
+import Register from "./pages/register/Register";
+import Login from "./pages/login/Login";
+import BookTable from "./pages/bookTable/BookTable";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -22,7 +25,7 @@ const ScrollToTop = () => {
   useEffect(() => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth",
+      behavior: "smooth"
     });
   }, [pathname]);
 
@@ -74,6 +77,9 @@ const App = () => {
           <Route path="events" element={<Event />} />
           <Route path="testimonial" element={<Testimonial />} />
           <Route path="gallery" element={<Gallery />} />
+          <Route path="register" element={<Register />} />
+          <Route path="login" element={<Login />} />
+          <Route path="book" element={<BookTable />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
 

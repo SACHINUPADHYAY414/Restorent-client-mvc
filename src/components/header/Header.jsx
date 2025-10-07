@@ -181,7 +181,7 @@ const Header = () => {
             : "bg-transparent"
         } ${showOffcanvas ? "mb-1" : ""}`}
       >
-        <Container className="transition-container">
+        <Container className="transition-container mb-1">
           <Navbar.Brand as={Link} to="/" className="fw-bold fs-3 text-white">
             {COMPANY_NAME}
           </Navbar.Brand>

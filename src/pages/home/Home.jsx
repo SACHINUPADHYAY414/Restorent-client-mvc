@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import toast, { Toaster } from "react-hot-toast";
 import { FaClock, FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
 import { COMPANY_LOCATION, COMPANY_NAME } from "../../utills/string";
 import About from "../about/About";
@@ -10,8 +9,12 @@ import Testimonial from "../testimonial/Testimonial.jsx";
 import Gallery from "../gallery/Gallery.jsx";
 import api from "../../components/action/Api.js";
 import { heroImages } from "../../utills/images.js";
+import { useToastr } from "../../components/toast/Toast.jsx";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const { customToast } = useToastr();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -36,9 +39,14 @@ const Home = () => {
     window?.loadingStart?.();
 
     try {
-      await api.post("/reservations", formData);
-      toast.success("Reservation successful! We look forward to seeing you.");
-
+      const response = await api.post("/reservations", formData);
+      customToast({
+        severity: "success",
+        summary: "Success",
+        detail:
+          response.message ||
+          "Reservation successful! We look forward to seeing you."
+      });
       setFormData({
         name: "",
         email: "",
@@ -52,13 +60,17 @@ const Home = () => {
       const message =
         err.response?.data?.message ||
         "Failed to submit reservation. Please try again.";
-      toast.error(message);
+      customToast({
+        severity: "success",
+        summary: "Success",
+        detail: message
+      });
     } finally {
       window?.loadingEnd?.();
     }
   };
 
- const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -70,8 +82,7 @@ const Home = () => {
 
   return (
     <div className="home-section">
-      <Toaster position="top-right" reverseOrder={false} />
-     <section
+      <section
         id="home"
         style={{
           position: "relative",
@@ -80,7 +91,7 @@ const Home = () => {
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           backgroundSize: "cover",
-          color: "white",
+          color: "white"
         }}
         className="hero-section"
       >
@@ -113,10 +124,15 @@ const Home = () => {
                   <Button
                     variant="warning"
                     className="fw-semibold text-white px-4 py-2"
+                    onClick={() => navigate("/book")}
                   >
                     Book a Table
                   </Button>
-                  <Button variant="outline-light" className="px-4 py-2">
+                  <Button
+                    variant="outline-light"
+                    className="px-4 py-2"
+                    onClick={() => navigate("/menu")}
+                  >
                     View Menu
                   </Button>
                 </div>
@@ -217,7 +233,7 @@ const Home = () => {
                               }));
                             }
                           }}
-                          placeholder="Guests"
+                          placeholder="No. of Guests"
                           required
                         />
                       </Col>
@@ -248,7 +264,7 @@ const Home = () => {
                       name="requests"
                       value={formData.requests}
                       onChange={handleChange}
-                      placeholder="Special requests or dietary restrictions"
+                      placeholder="Special requests (e.g., dietary needs, seating preference)"
                       className="mb-3"
                     />
                     <Button
@@ -275,9 +291,7 @@ const Home = () => {
       <section id="testimonial">
         <Testimonial />
       </section>
-      <section
-        id="events"
-      >
+      <section id="events">
         <Event />
       </section>
 
