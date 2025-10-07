@@ -21,8 +21,16 @@ const fieldSchema = [
     colClass: "col-md-3"
   },
   {
-    name: "name",
-    label: "Name",
+    name: "firstName",
+    label: "First Name",
+    type: "text",
+    required: true,
+    colClass: "col-md-3",
+    placeholder: "Full Name"
+  },
+  {
+    name: "lastName",
+    label: "Last Name",
     type: "text",
     required: true,
     colClass: "col-md-3",
@@ -90,15 +98,20 @@ const fieldSchema = [
     type: "password",
     required: true,
     minLength: 6,
-    errorMessage: "Password is required.",
+    errorMessage: "Password must be at least 6 characters.",
     colClass: "col-md-3",
     placeholder: "Enter Password"
   }
 ];
 
+const initialFormState = fieldSchema.reduce((acc, field) => {
+  acc[field.name] = "";
+  return acc;
+}, {});
+
 const Register = () => {
   const { customToast } = useToastr();
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState(initialFormState);
   const [options, setOptions] = useState({
     titles: [],
     genders: [],
@@ -127,7 +140,6 @@ const Register = () => {
           countries: countries.data
         });
       } catch (e) {
-        console.error("Dropdown fetch failed", e.message);
         customToast({
           severity: "error",
           summary: "Error!",
@@ -138,17 +150,20 @@ const Register = () => {
         window?.loadingEnd?.();
       }
     }
-
     fetchDropdowns();
   }, [customToast]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     if (["mobile", "pincode"].includes(name)) {
       if (!/^\d*$/.test(value)) return;
     }
 
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const validateForm = () => {
@@ -175,7 +190,6 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const validationError = validateForm();
 
     if (validationError) {
@@ -209,83 +223,116 @@ const Register = () => {
   };
 
   return (
-    <section
-      className="d-flex bg-danger justify-content-center align-items-center"
+    <div
       style={{
+        minHeight: "94vh",
         backgroundImage:
           "url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1470&q=80')",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        minHeight: "90vh"
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "10px"
       }}
     >
-      <div className="py-4">
-        <div
-          className="card p-4 shadow rounded"
-          style={{ maxWidth: "700px", width: "100%" }}
+      <div
+        style={{
+          maxWidth: "700px",
+          width: "100%",
+          backgroundColor: "rgba(255, 248, 240, 0.95)",
+          borderRadius: "15px",
+          boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+          padding: "30px"
+        }}
+      >
+        <h2
+          className="mb-4 text-center"
+          style={{
+            fontFamily: "'Brush Script MT', cursive",
+            fontWeight: "700",
+            fontSize: "2.8rem",
+            color: "#d35400",
+            textShadow: "1px 1px 2px #ba4a00"
+          }}
         >
-          <h2 className="mb-4 text-center">Register</h2>
-          <form className="row g-3" onSubmit={handleSubmit}>
-            {fieldSchema.map((field) => (
-              <div className={field.colClass || "col-12"} key={field.name}>
-                <label htmlFor={field.name} className="form-label">
-                  {field.label}
-                </label>
-                {field.type === "select" ? (
-                  <select
-                    id={field.name}
-                    name={field.name}
-                    className="form-select"
-                    value={form[field.name] || ""}
-                    onChange={handleChange}
-                    required={field.required}
-                  >
-                    <option value="">Select {field.label}</option>
-                    {options[field.optionsKey]?.map((opt, idx) => (
-                      <option key={idx} value={opt}>
-                        {opt}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    type={field.type}
-                    id={field.name}
-                    name={field.name}
-                    className="form-control"
-                    value={form[field.name] || ""}
-                    onChange={handleChange}
-                    required={field.required}
-                    maxLength={field.maxLength || undefined}
-                    minLength={field.minLength || undefined}
-                    placeholder={field.placeholder}
-                    inputMode={
-                      ["mobile", "pincode"].includes(field.name)
-                        ? "numeric"
-                        : undefined
+          Register
+        </h2>
+
+        <form className="row g-2" onSubmit={handleSubmit}>
+          {fieldSchema.map((field) => (
+            <div className={field.colClass || "col-12"} key={field.name}>
+              <label htmlFor={field.name} className="form-label">
+                {field.label}
+              </label>
+
+              {field.type === "select" ? (
+                <select
+                  id={field.name}
+                  name={field.name}
+                  value={form[field.name]}
+                  onChange={handleChange}
+                  required={field.required}
+                  className="form-control"
+                >
+                  <option value="">Select {field.label}</option>
+                  {options[field.optionsKey]?.map((opt) => (
+                    <option key={opt.id || opt} value={opt.id || opt}>
+                      {opt.name || opt}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type={field.type}
+                  id={field.name}
+                  name={field.name}
+                  value={form[field.name]}
+                  onChange={handleChange}
+                  required={field.required}
+                  maxLength={field.maxLength || undefined}
+                  minLength={field.minLength || undefined}
+                  placeholder={field.placeholder}
+                  inputMode={
+                    ["mobile", "pincode"].includes(field.name)
+                      ? "numeric"
+                      : undefined
+                  }
+                  onKeyPress={(e) => {
+                    if (
+                      ["mobile", "pincode"].includes(field.name) &&
+                      !/[0-9]/.test(e.key)
+                    ) {
+                      e.preventDefault();
                     }
-                    onKeyPress={(e) => {
-                      if (
-                        ["mobile", "pincode"].includes(field.name) &&
-                        !/[0-9]/.test(e.key)
-                      ) {
-                        e.preventDefault();
-                      }
-                    }}
-                  />
-                )}
-              </div>
-            ))}
-            <div className="col-12 d-grid mt-3">
-              <button type="submit" className="btn btn-primary">
-                Register
-              </button>
+                  }}
+                  className="form-control"
+                />
+              )}
             </div>
-          </form>
-        </div>
+          ))}
+
+          <div className="col-12 d-grid mt-3">
+            <button
+              type="submit"
+              style={{
+                backgroundColor: "#f39c12",
+                border: "none",
+                fontSize: "1.2rem",
+                fontWeight: "600",
+                color: "#4b2e00",
+                padding: "10px",
+                borderRadius: "50px",
+                boxShadow: "0 4px 12px rgba(211, 84, 0, 0.5)",
+                cursor: "pointer"
+              }}
+            >
+              Register
+            </button>
+          </div>
+        </form>
       </div>
-    </section>
+    </div>
   );
 };
 

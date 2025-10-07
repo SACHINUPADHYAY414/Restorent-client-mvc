@@ -516,3 +516,27 @@ body {
   outline: none !important;
   box-shadow: none !important;
 }
+label {
+  display: block;
+  margin-bottom: 0px !important;
+  font-weight: 500;
+  color: #6e2c00;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.form-control,
+.form-select {
+  border-radius: 10px;
+  padding: 7px;
+  width: 100%;
+  border: 2px solid #d35400;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #e67e22 !important;
+  outline: none !important;
+}
