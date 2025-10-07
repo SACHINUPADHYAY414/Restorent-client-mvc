@@ -127,19 +127,20 @@ const Gallery = () => {
           </p>
         </div>
 
-        <div className="d-flex justify-content-center overflow-auto mb-3 px-2">
+        <div className="d-flex justify-content-center overflow-auto mb-3">
           <ul
-            className="nav nav-pills flex-nowrap gap-1"
+            className="nav nav-pills flex-nowrap gap-1 small"
             style={{ minWidth: "max-content" }}
           >
             {tabs.map((tab) => (
-              <li className="nav-item" key={tab}>
+              <li key={tab}>
                 <button
-                  className={`nav-link px-2 px-md-3 py-1 py-md-2 rounded-pill ${
-                    activeTab === tab ? "active bg-dark text-white" : "bg-light"
+                  className={`btn px-2 px-md-3 rounded-pill fw-semibold ${
+                    activeTab === tab
+                      ? "active btn-warning text-white"
+                      : "btn-warning-border"
                   }`}
                   onClick={() => setActiveTab(tab)}
-                  style={{ whiteSpace: "nowrap" }}
                 >
                   {tab}
                 </button>

@@ -9,82 +9,118 @@ import {
   FaEnvelope
 } from "react-icons/fa";
 import {
+  COMPANY_NAME,
+  COMPANY_NUMBER,
   COMPANY_EMAIL,
   COMPANY_LOCATION,
-  COMPANY_NUMBER,
-  RESTAURANT_ESTABLISHED_YEAR
+  RESTAURANT_ESTABLISHED_YEAR,
+  COMPANY_CEO,
+  SOCIAL_MEDIA_LINKS
 } from "../../utills/string";
 
 const Footer = () => {
   return (
-    <footer className="bg-dark text-white pt-5 pb-2">
-      <div className="container text-center text-md-start">
-        <div className="row">
-          <div className="col-md-4 col-lg-4 col-xl-3 mx-auto mb-3">
-            <h5 className="text-uppercase fw-bold mb-4">Our Restaurant</h5>
-            <p>
+    <footer className="footer-bg text-white pb-2">
+      <div className="container mx-auto text-center text-md-start">
+        <div className="row py-1 py-md-3 gy-2">
+          {/* Our Restaurant */}
+          <div className="col-12 col-md-4">
+            <h6 className="text-uppercase fw-bold mb-2 fs-7 fs-md-6">
+              Our {COMPANY_NAME}
+            </h6>
+            <p className="fs-7 fs-md-6 mb-0">
               Serving delicious food with fresh ingredients. Cozy atmosphere and
               friendly staff.
             </p>
           </div>
 
-          <div className="col-md-4 col-lg-4 col-xl-3 mx-auto mb-3">
-            <h5 className="text-uppercase fw-bold mb-4">Contact</h5>
-            <p>
-              <FaMapMarkerAlt className="me-1" /> {COMPANY_LOCATION}
-            </p>
-            <p>
-              <FaPhone className="me-1" /> {COMPANY_NUMBER}
-            </p>
-            <p>
-              <FaEnvelope className="me-1" /> {COMPANY_EMAIL}
-            </p>
+          {/* Contact */}
+          <div className="col-12 col-md-3 d-flex flex-column">
+            <h6 className="text-uppercase fw-bold mb-2 fs-7 fs-md-6">
+              Contact
+            </h6>
+            <span className="fs-7 fs-md-6 mb-1 d-flex justify-content-center justify-content-md-start align-items-center">
+              <FaMapMarkerAlt
+                className="me-1"
+                style={{ fontSize: "0.8rem" }}
+                aria-hidden="true"
+              />
+              {COMPANY_LOCATION}
+            </span>
+
+            <span className="fs-7 fs-md-6 mb-1 d-flex justify-content-center justify-content-md-start align-items-center">
+              <FaPhone
+                className="me-1"
+                style={{ fontSize: "0.8rem" }}
+                aria-hidden="true"
+              />
+              {COMPANY_NUMBER}
+            </span>
+
+            <span className="fs-7 fs-md-6 d-flex justify-content-center justify-content-md-start align-items-center">
+              <FaEnvelope
+                className="me-1"
+                style={{ fontSize: "0.8rem" }}
+                aria-hidden="true"
+              />
+              {COMPANY_EMAIL}
+            </span>
           </div>
 
-        
-          <div className="col-md-4 col-lg-4 col-xl-3 mx-auto mb-3">
-            <h5 className="text-uppercase fw-bold mb-4">Opening Hours</h5>
-            <p>Mon - Fri: 9:00 AM - 10:00 PM</p>
-            <p>Sat - Sun: 10:00 AM - 11:00 PM</p>
+          {/* Opening Hours */}
+          <div className="col-12 col-md-3 d-flex flex-column">
+            <h6 className="text-uppercase fw-bold mb-2 fs-7 fs-md-6">
+              Opening Hours
+            </h6>
+            <span className="fs-7 fs-md-6 mb-1">
+              Mon - Fri: 9:00 AM - 10:00 PM
+            </span>
+            <span className="fs-7 fs-md-6">Sat - Sun: 10:00 AM - 11:00 PM</span>
           </div>
 
           {/* Social Media */}
-          <div className="col-md-12 col-lg-12 col-xl-3 mx-auto mb-3 text-center text-md-start">
-            <h5 className="text-uppercase fw-bold mb-4">Follow Us</h5>
-            <div className="d-flex justify-content-center justify-content-md-start gap-3 fs-4">
+          <div className="col-12 col-md-2 text-center text-md-start">
+            <h6 className="text-uppercase fw-bold mb-2 fs-7 fs-md-6">
+              Follow Us
+            </h6>
+            <div className="d-flex justify-content-center justify-content-md-start gap-3">
               <a
-                href="https://facebook.com"
+                href={SOCIAL_MEDIA_LINKS.facebook}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Facebook"
                 className="text-white"
+                style={{ fontSize: "0.9rem" }}
               >
                 <FaFacebookF />
               </a>
               <a
-                href="https://instagram.com"
+                href={SOCIAL_MEDIA_LINKS.instagram}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Instagram"
                 className="text-white"
+                style={{ fontSize: "0.9rem" }}
               >
                 <FaInstagram />
               </a>
               <a
-                href="https://twitter.com"
+                href={SOCIAL_MEDIA_LINKS.twitter}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Twitter"
                 className="text-white"
+                style={{ fontSize: "0.9rem" }}
               >
                 <FaTwitter />
               </a>
               <a
-                href="https://linkedin.com"
+                href={SOCIAL_MEDIA_LINKS.linkedin}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="LinkedIn"
                 className="text-white"
+                style={{ fontSize: "0.9rem" }}
               >
                 <FaLinkedinIn />
               </a>
@@ -92,9 +128,10 @@ const Footer = () => {
           </div>
         </div>
 
-        <hr className="mb-1" />
-        <div className="text-center">
-          &copy; {RESTAURANT_ESTABLISHED_YEAR} Our Restaurant. All rights reserved.
+        <hr className="my-1" />
+        <div className="text-center small">
+          &copy; {RESTAURANT_ESTABLISHED_YEAR} Our  {COMPANY_NAME}. All rights
+          reserved.
         </div>
       </div>
     </footer>

@@ -30,7 +30,7 @@ const About = () => {
   }, [yearsOfDedication]);
 
   return (
-    <section className="about-section py-3 py-md-3">
+    <section className="about-section py-3 py-md-3" style={{minHeight:"80vh"}}>
       <div className="container">
       <div className="heading-wrapper text-center">
           <h2 className="background-text">About</h2>
@@ -86,7 +86,7 @@ const About = () => {
             </div>
           </div>
 
-          <div className="col-md-6 mt-4 mt-md-0">
+          <div className="col-md-6 mt-1 mt-md-0">
             <div className="row g-3">
               <div className="col-6">
                 <img

@@ -117,7 +117,7 @@ const Event = () => {
   const upcomingEvents = getUpcomingRestaurantEvents();
 
   return (
-    <Container fluid className="py-2 py-md-3 px-2 px-md-5" style={{minHeight:"44.6vh"}}>
+    <Container fluid className="py-2 py-md-3 px-2 px-md-5" style={{minHeight:"50.3vh"}}>
       <div className="heading-wrapper text-center mb-2">
         <h2 className="background-text">Event</h2>
         <h2 className="foreground-text">Event</h2>

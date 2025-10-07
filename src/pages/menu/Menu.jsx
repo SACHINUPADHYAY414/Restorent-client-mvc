@@ -151,7 +151,7 @@ const Menu = () => {
   }, [activeTab, menuItems]);
 
   return (
-    <section className="py-3 py-md-3">
+    <section className="py-3 py-md-3" style={{ minHeight: "80vh" }}>
       <div className="container">
         <div className="heading-wrapper text-center">
           <h2 className="background-text">Menu</h2>
@@ -167,7 +167,9 @@ const Menu = () => {
             <li className="nav-item" key={tab}>
               <button
                 className={`nav-link px-4 py-2 rounded-pill ${
-                  activeTab === tab ? "active bg-orange text-white" : ""
+                  activeTab === tab
+                    ? "active bg-orange text-white"
+                    : "text-black"
                 }`}
                 onClick={() => setActiveTab(tab)}
               >
@@ -177,7 +179,7 @@ const Menu = () => {
           ))}
         </ul>
 
-        <div className="row g-1 g-md-3">
+        <div className="row g-2 g-md-3">
           {shuffledItems.length > 0 && (
             <AnimatePresence>
               {shuffledItems.map(
@@ -205,7 +207,7 @@ const Menu = () => {
                             {type}
                           </span>
                         </div>
-                        <div className="position-absolute bottom-2 end-2 bg-orange text-white px-3 py-1 rounded-3 price-tag">
+                        <div className="position-absolute bottom-2 end-2 bg-orange text-white px-2 py-1 rounded-3 price-tag">
                           {price}
                         </div>
                       </div>
