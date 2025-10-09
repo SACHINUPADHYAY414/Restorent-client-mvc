@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import TooltipWrapper from "../Tooltip/TooltipWrapper";
+import TooltipWrapper from "../tooltip/TooltipWrapper";
 import { RiInformation2Line } from "react-icons/ri";
 import { AiTwotoneEye, AiTwotoneEyeInvisible } from "react-icons/ai";
 import { FaCheck } from "react-icons/fa6";

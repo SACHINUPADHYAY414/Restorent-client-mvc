@@ -31,7 +31,8 @@ import {
 } from "../../utills/string";
 import { useMediaQuery } from "react-responsive";
 import { defaultImages } from "../../utills/images";
-import TooltipWrapper from "../../components/Tooltip/TooltipWrapper";
+import TooltipWrapper from "../../components/tooltip/TooltipWrapper";
+
 const titleList = [
   { id: "1", name: "Mr." },
   { id: "2", name: "Mrs." },
