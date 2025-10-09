@@ -18,6 +18,11 @@ import Testimonial from "./pages/testimonial/Testimonial";
 import Register from "./pages/register/Register";
 import Login from "./pages/login/Login";
 import BookTable from "./pages/bookTable/BookTable";
+import { EXPIRATION_TIME, OPPS_MSG, TOKEN_EXPIRE } from "./utills/string";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "./store/slice/authSlice";
+import { useToastr } from "./components/toast/Toast";
+import Profile from './pages/profile/Profile';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -33,38 +38,63 @@ const ScrollToTop = () => {
 };
 
 const App = () => {
+  const dispatch = useDispatch();
+  const { loginTime, isAuthenticated } = useSelector((state) => state.auth);
+
+  const { customToast } = useToastr();
   useEffect(() => {
-    const style = document.createElement("style");
-    style.innerHTML = `
-      body, body * {
-        -webkit-user-select: none !important;
-        -moz-user-select: none !important;
-        -ms-user-select: none !important;
-        user-select: none !important;
-        -webkit-touch-callout: none !important;
-      }
-    `;
-    document.head.appendChild(style);
+    if (isAuthenticated && loginTime) {
+      const interval = setInterval(() => {
+        const now = Date.now();
+        const timePassed = now - loginTime;
 
-    const handleContextMenu = (e) => e.preventDefault();
-    document.addEventListener("contextmenu", handleContextMenu);
+        if (timePassed >= EXPIRATION_TIME) {
+          dispatch(logout());
+          clearInterval(interval);
+          customToast({
+            severity: "error",
+            summary: OPPS_MSG,
+            detail: TOKEN_EXPIRE
+          });
+        }
+      }, 1000);
 
-    const handleKeyDown = (e) => {
-      if (
-        (e.ctrlKey || e.metaKey) &&
-        ["c", "x", "s", "p"].includes(e.key.toLowerCase())
-      ) {
-        e.preventDefault();
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
+      return () => clearInterval(interval);
+    }
+  }, [loginTime, isAuthenticated, dispatch]);
 
-    return () => {
-      document.head.removeChild(style);
-      document.removeEventListener("contextmenu", handleContextMenu);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const style = document.createElement("style");
+  //   style.innerHTML = `
+  //     body, body * {
+  //       -webkit-user-select: none !important;
+  //       -moz-user-select: none !important;
+  //       -ms-user-select: none !important;
+  //       user-select: none !important;
+  //       -webkit-touch-callout: none !important;
+  //     }
+  //   `;
+  //   document.head.appendChild(style);
+
+  //   const handleContextMenu = (e) => e.preventDefault();
+  //   document.addEventListener("contextmenu", handleContextMenu);
+
+  //   const handleKeyDown = (e) => {
+  //     if (
+  //       (e.ctrlKey || e.metaKey) &&
+  //       ["c", "x", "s", "p"].includes(e.key.toLowerCase())
+  //     ) {
+  //       e.preventDefault();
+  //     }
+  //   };
+  //   document.addEventListener("keydown", handleKeyDown);
+
+  //   return () => {
+  //     document.head.removeChild(style);
+  //     document.removeEventListener("contextmenu", handleContextMenu);
+  //     document.removeEventListener("keydown", handleKeyDown);
+  //   };
+  // }, []);
 
   return (
     <Router>
@@ -81,13 +111,21 @@ const App = () => {
           <Route path="login" element={<Login />} />
           <Route path="book" element={<BookTable />} />
           <Route path="*" element={<PageNotFound />} />
+          <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
         </Route>
 
         <Route
-          path="/dashboard"
+          path="/profile"
           element={
             <PrivateRoute>
-              <Layout />
+              <Profile />
             </PrivateRoute>
           }
         />

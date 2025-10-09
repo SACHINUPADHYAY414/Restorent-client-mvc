@@ -139,7 +139,7 @@ body {
   color: #000;
   z-index: 2;
   margin: 0;
-  font-family: "Courier New", Courier, monospace;
+  font-family:Georgia, 'Times New Roman', Times, serif;
 }
 
 /* ==== 5. About Section ==== */
@@ -516,6 +516,7 @@ body {
   outline: none !important;
   box-shadow: none !important;
 }
+
 label {
   display: block;
   margin-bottom: 0px !important;
@@ -527,16 +528,48 @@ label {
 
 .form-control,
 .form-select {
-  border-radius: 10px;
-  padding: 7px;
   width: 100%;
-  border: 2px solid #d35400;
-  box-shadow: none !important;
-  outline: none !important;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc !important;
+  font-size: 1rem;
+  box-sizing: border-box;
+  background-color: transparent;
 }
 
 .form-control:focus,
 .form-select:focus {
-  border-color: #e67e22 !important;
   outline: none !important;
+  box-shadow: none !important;
+  border-color: #ccc !important;
+}
+
+input, select {
+  border: 1px solid #ccc;
+  background-color: transparent;
+  border-radius: 5px;
+  padding: 8px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input:focus, select:focus {
+  border-color: #ccc;
+  outline: none;
+  box-shadow: none;
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 2rem;
+  background-image: none;
+  line-height: 1.5;
+}
+.dropdown-item.text-warning.fw-semibold:hover {
+  color: white !important;
+  cursor: pointer;
+  transition: color 0.3s ease;
 }

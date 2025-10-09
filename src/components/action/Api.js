@@ -1,29 +1,28 @@
-import axios from "axios";
-
-const VITE_LOCAL_API = "https://localhost:8080/api";
+import axios from 'axios';
+import { store } from '../../store/store';
+const VITE_LOCAL_API = "http://localhost:8082/api";
 
 const api = axios.create({
   baseURL: VITE_LOCAL_API,
   headers: {
-    "Content-Type": "application/json"
-  }
+    "Content-Type": "application/json",
+  },
 });
 
-let storeToken = null;
+api.interceptors.request.use(
+  (config) => {
+    const state = store.getState();
+    const token = state.auth.token;
+    if (!config.skipAuth && token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 let toastFn = null;
 let navigateFn = null;
-
-export const setToastHandler = (fn) => {
-  toastFn = fn;
-};
-
-export const setToken = (token) => {
-  storeToken = token;
-};
-
-export const setNavigate = (navigate) => {
-  navigateFn = navigate;
-};
 
 const redirectTo = (path) => {
   if (navigateFn) {
@@ -31,18 +30,6 @@ const redirectTo = (path) => {
   }
 };
 
-// ====== Request Interceptor ======
-api.interceptors.request.use(
-  (config) => {
-    if (!config.skipAuth && storeToken) {
-      config.headers.Authorization = `Bearer ${storeToken}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-// ====== Response Interceptor ======
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -52,7 +39,7 @@ api.interceptors.response.use(
           severity: "error",
           summary: "Server Error",
           detail: "Server unreachable. Please try again later.",
-          life: 3000
+          life: 3000,
         });
       }
       redirectTo("/server-error");

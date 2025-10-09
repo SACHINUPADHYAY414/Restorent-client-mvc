@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import api from "../../components/action/Api";
 import { login } from "../../store/slice/authSlice";
 import { useToastr } from "../../components/toast/Toast";
+import { OPPS_MSG, SUCCESS_MSG } from "../../utills/string";
 
 const formFields = [
   {
@@ -55,22 +56,32 @@ const Login = () => {
 
     try {
       window?.loadingStart?.();
-      const response = await api.password({
+      const payload = {
         email: formData.email,
         password: formData.password
-      });
+      };
+
+      const response = await api.post("/auth/login", payload);
       customToast({
         severity: "success",
-        summary: "Success",
+        summary: SUCCESS_MSG,
         detail: response.message || "Logged in successfully!"
       });
-      dispatch(login(response.user));
+ 
+    dispatch(login({
+      user: response.data.user,
+      token: response.data.token,
+    }));
       navigate("/");
     } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Something went wrong";
       customToast({
         severity: "error",
-        summary: "Login Failed",
-        detail: error.message
+        summary: OPPS_MSG,
+        detail: errorMessage
       });
     } finally {
       window?.loadingEnd?.();
@@ -117,11 +128,7 @@ const Login = () => {
         <Form onSubmit={handleSubmit}>
           {formFields.map(({ id, label, type, placeholder, autoComplete }) => (
             <Form.Group controlId={id} className="mb-1" key={id}>
-              <Form.Label
-              className="form-label"
-              >
-                {label}
-              </Form.Label>
+              <Form.Label className="form-label">{label}</Form.Label>
               <Form.Control
                 type={type}
                 placeholder={placeholder}
@@ -137,13 +144,7 @@ const Login = () => {
           <Button
             variant="warning"
             type="submit"
-            className="w-100 fw-semibold"
-            style={{
-              fontSize: "1.2rem",
-              borderRadius: "50px",
-              padding: "10px",
-              boxShadow: "0 4px 12px rgba(211, 84, 0, 0.5)"
-            }}
+            className="w-100 fw-semibold mt-2"
           >
             Login
           </Button>
