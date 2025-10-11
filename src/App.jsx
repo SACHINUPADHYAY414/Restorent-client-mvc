@@ -22,7 +22,15 @@ import { EXPIRATION_TIME, OPPS_MSG, TOKEN_EXPIRE } from "./utills/string";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./store/slice/authSlice";
 import { useToastr } from "./components/toast/Toast";
-import Profile from './pages/profile/Profile';
+import Profile from "./pages/profile/Profile";
+import Reservation from "./pages/reservation/Reservation";
+import MenuItems from "./admin/pages/menuItem/MenuItems";
+import AddMenuItem from "./admin/pages/menuItem/AddMenuItem";
+import AdminGallery from "./admin/pages/gallery/Gallery";
+import ReservationBook from "./admin/pages/reservationBook/ReservationBook";
+import DashboardLayout from "./admin/dashboard/Dashboard";
+import AddEditGallery from "./admin/pages/gallery/AddGallery";
+import DashboardHome from "./admin/pages/home/Home";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -112,23 +120,38 @@ const App = () => {
           <Route path="book" element={<BookTable />} />
           <Route path="*" element={<PageNotFound />} />
           <Route
-          path="/profile"
-          element={
-            <PrivateRoute>
-              <Profile />
-            </PrivateRoute>
-          }
-        />
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/reservation"
+            element={
+              <PrivateRoute>
+                <Reservation />
+              </PrivateRoute>
+            }
+          />
         </Route>
-
         <Route
-          path="/profile"
+          path="/dashboard"
           element={
             <PrivateRoute>
-              <Profile />
+              <DashboardLayout />
             </PrivateRoute>
           }
-        />
+        >
+          
+          <Route path="home" element={<DashboardHome />} />
+          <Route path="menu-items" element={<MenuItems />} />
+          <Route path="add-menu" element={<AddMenuItem />} />
+          <Route path="gallery" element={<AdminGallery />} />
+          <Route path="reservations" element={<ReservationBook />} />
+          <Route path="add-gallery" element={<AddEditGallery />} />
+        </Route>
       </Routes>
     </Router>
   );

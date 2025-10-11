@@ -11,11 +11,13 @@ import {
   FaClock,
   FaRegCommentDots
 } from "react-icons/fa";
-import { COMPANY_NAME } from "../../utills/string";
+import { COMPANY_NAME, OPPS_MSG } from "../../utills/string";
 import { heroImages } from "../../utills/images";
+import { useSelector } from "react-redux";
 
 const BookTable = () => {
   const { customToast } = useToastr();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -57,11 +59,10 @@ const BookTable = () => {
       });
       return;
     }
-
     window?.loadingStart?.();
-
     try {
-      const response = await api.post("/reservations", formData);
+      const { email, ...rest } = formData;
+      const response = await api.post(`/reservations/add/${email}`, rest);
       customToast({
         severity: "success",
         summary: "Reservation Confirmed",
@@ -79,15 +80,33 @@ const BookTable = () => {
         time: "",
         requests: ""
       });
+      window.location.href = "/reservation";
     } catch (err) {
+      const errorData = err.response?.data;
       const message =
-        err.response?.data?.message ||
-        "Unable to process your reservation. Please try again.";
+        errorData?.error ||
+        errorData?.message ||
+        "Failed to submit reservation. Please try again.";
+
       customToast({
         severity: "error",
-        summary: "Reservation Failed",
+        summary: OPPS_MSG,
         detail: message
       });
+
+      if (message === "Email not registered") {
+        if (!isAuthenticated) {
+          setTimeout(() => {
+            window.location.href = "/register";
+          }, 4000);
+        } else {
+          customToast({
+            severity: "error",
+            summary: "Invalid Email",
+            detail: "Please enter the email used to log in."
+          });
+        }
+      }
     } finally {
       window?.loadingEnd?.();
     }

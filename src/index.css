@@ -573,3 +573,14 @@ select {
   cursor: pointer;
   transition: color 0.3s ease;
 }
+.dropdown-toggle::after {
+  display: none !important;
+}
+.page-h{
+  font-weight: 600;
+  font-size: x-large;
+}
+.table th {
+  background-color: #dbe0e5 !important;
+  color: rgb(150, 90, 78) !important;
+}

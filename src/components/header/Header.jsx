@@ -3,15 +3,21 @@ import { Navbar, Nav, Container, Offcanvas, Button } from "react-bootstrap";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../store/slice/authSlice";
-import { COMPANY_NAME } from "../../utills/string";
+import {
+  COMPANY_NAME,
+  LOGOUT_SUCCESS,
+  SUCCESS,
+  SUCCESS_MSG
+} from "../../utills/string";
 import { FaRegCircleUser } from "react-icons/fa6";
+import { useToastr } from "../toast/Toast";
 
 const navItems = [
   { id: "home", label: "Home", path: "/" },
-  { id: "about", label: "About", path: "/about" },
-  { id: "menu", label: "Menu", path: "/menu" },
   { id: "book", label: "Book a Table", path: "/book" },
-  { id: "gallery", label: "Gallery", path: "/gallery" }
+  { id: "menu", label: "Menu", path: "/menu" },
+  { id: "gallery", label: "Gallery", path: "/gallery" },
+  { id: "about", label: "About", path: "/about" }
 ];
 
 const Header = () => {
@@ -25,13 +31,19 @@ const Header = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-
   const userMenuRef = useRef(null);
+  const { customToast } = useToastr();
 
   const handleLogout = () => {
     dispatch(logout());
     setShowUserMenu(false);
     setShowOffcanvas(false);
+    customToast({
+      severity: SUCCESS,
+      summary: SUCCESS_MSG,
+      detail: LOGOUT_SUCCESS,
+      life: 4000
+    });
   };
 
   const toggleUserMenu = () => {
@@ -245,6 +257,15 @@ const Header = () => {
                       }}
                     >
                       Profile
+                    </button>
+                    <button
+                      className="dropdown-item text-warning fw-semibold ms-2"
+                      onClick={() => {
+                        navigate("/reservation");
+                        setShowUserMenu(false);
+                      }}
+                    >
+                      Reservation
                     </button>
                     <button
                       className="dropdown-item text-warning fw-semibold ms-2"

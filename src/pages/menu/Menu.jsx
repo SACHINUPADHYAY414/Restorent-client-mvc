@@ -116,14 +116,9 @@ const Menu = () => {
     const fetchMenu = async () => {
       try {
         window?.loadingStart?.();
-        const response = await api.fetch("/menu");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const data = await response.json();
+        const response = await api.get("/menu/all");
+        const data = response.data;
         setMenuItems(data);
-
         const types = Array.from(new Set(data.map((item) => item.type))).sort();
         setTabs(["All Dishes", ...types]);
       } catch (err) {
@@ -132,7 +127,9 @@ const Menu = () => {
           new Set(fallbackData.map((item) => item.type))
         ).sort();
         setTabs(["All Dishes", ...types]);
-        setError("Failed to fetch from server. Showing fallback items.");
+        setError(
+          err.message || "Failed to fetch from server. Showing fallback items."
+        );
       } finally {
         window?.loadingEnd?.();
       }
@@ -150,33 +147,38 @@ const Menu = () => {
   }, [activeTab, menuItems]);
 
   return (
-    <section className="py-3 py-md-3" style={{ minHeight: "80vh" }}>
+    <section className="py-3 py-md-3" style={{ minHeight: "67.35vh" }}>
       <div className="container">
         <div className="heading-wrapper text-center">
           <h2 className="background-text">Menu</h2>
           <h2 className="foreground-text">Menu</h2>
         </div>
 
-        <p className="text-center mb-4 fw-semibold">
+        <p className="text-center mb-2 fw-semibold">
           Select your favorite dishes and enjoy!
         </p>
 
-        <ul className="nav nav-pills justify-content-center mb-2 rounded-5 bg-white shadow-sm menu-tabs p-2 gap-2">
-          {tabs.map((tab) => (
-            <li className="nav-item" key={tab}>
-              <button
-                className={`nav-link px-4 py-2 rounded-pill ${
-                  activeTab === tab
-                    ? "active bg-orange text-white"
-                    : "text-black"
-                }`}
-                onClick={() => setActiveTab(tab)}
-              >
-                {tab}
-              </button>
-            </li>
-          ))}
-        </ul>
+        <div className="d-flex justify-content-center overflow-auto mb-3">
+          <ul
+            className="nav nav-pills flex-nowrap gap-1 small"
+            style={{ minWidth: "max-content" }}
+          >
+            {tabs.map((tab) => (
+              <li key={tab}>
+                <button
+                  className={`btn px-2 px-md-3 rounded-pill fw-semibold ${
+                    activeTab === tab
+                      ? "active btn-warning text-white"
+                      : "btn-warning-border"
+                  }`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <div className="row g-2 g-md-3">
           {shuffledItems.length > 0 && (
@@ -201,13 +203,13 @@ const Menu = () => {
                           style={{ height: "220px", objectFit: "cover" }}
                           loading="lazy"
                         />
-                        <div className="position-absolute top-2 start-2 d-flex flex-wrap gap-1 p-2 tags-container">
-                          <span className="badge bg-success text-white tag-badge">
+                        <div className="position-absolute top-0 end-0 m-2">
+                          <span className="badge bg-success text-white">
                             {type}
                           </span>
                         </div>
                         <div className="position-absolute bottom-2 end-2 bg-orange text-white px-2 py-1 rounded-3 price-tag">
-                          {price}
+                          {price.startsWith("₹") ? price : `₹${price}`}
                         </div>
                       </div>
                       <div className="card-body">

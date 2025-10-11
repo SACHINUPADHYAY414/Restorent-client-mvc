@@ -60,24 +60,30 @@ const Login = () => {
         email: formData.email,
         password: formData.password
       };
-
       const response = await api.post("/auth/login", payload);
+
       customToast({
         severity: "success",
         summary: SUCCESS_MSG,
         detail: response.message || "Logged in successfully!"
       });
- 
-    dispatch(login({
-      user: response.data.user,
-      token: response.data.token,
-    }));
-      navigate("/");
+
+      const user = response.data.user;
+      const token = response.data.token;
+      dispatch(login({ user, token }));
+      if (user.role === "ADMIN") {
+        navigate("/dashboard/home");
+      } else if (user.role === "USER") {
+        navigate("/");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
         "Something went wrong";
+
       customToast({
         severity: "error",
         summary: OPPS_MSG,

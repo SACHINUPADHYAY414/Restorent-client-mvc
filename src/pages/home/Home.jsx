@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { FaClock, FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
-import { COMPANY_LOCATION, COMPANY_NAME } from "../../utills/string";
+import { COMPANY_LOCATION, COMPANY_NAME, OPPS_MSG } from "../../utills/string";
 import About from "../about/About";
 import Menu from "../menu/Menu";
 import Event from "../event/Event.jsx";
@@ -11,10 +11,14 @@ import api from "../../components/action/Api.js";
 import { heroImages } from "../../utills/images.js";
 import { useToastr } from "../../components/toast/Toast.jsx";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const { customToast } = useToastr();
   const navigate = useNavigate();
+  const userId = useSelector((state) => state.auth.user?.id);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,6 +28,12 @@ const Home = () => {
     time: "",
     requests: ""
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, userId: userId || null }));
+  }, [userId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,9 +47,12 @@ const Home = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     window?.loadingStart?.();
+    setIsSubmitting(true);
 
     try {
-      const response = await api.post("/reservations", formData);
+      const { email, ...rest } = formData;
+      const response = await api.post(`/reservations/add/${email}`, rest);
+
       customToast({
         severity: "success",
         summary: "Success",
@@ -47,7 +60,9 @@ const Home = () => {
           response.message ||
           "Reservation successful! We look forward to seeing you."
       });
-      setFormData({
+
+      setFormData((prev) => ({
+        ...prev,
         name: "",
         email: "",
         phone: "",
@@ -55,18 +70,36 @@ const Home = () => {
         date: "",
         time: "",
         requests: ""
-      });
+      }));
     } catch (err) {
+      const errorData = err.response?.data;
       const message =
-        err.response?.data?.message ||
+        errorData?.error ||
+        errorData?.message ||
         "Failed to submit reservation. Please try again.";
+
       customToast({
-        severity: "success",
-        summary: "Success",
+        severity: "error",
+        summary: OPPS_MSG,
         detail: message
       });
+
+      if (message === "Email not registered") {
+        if (!isAuthenticated) {
+          setTimeout(() => {
+            window.location.href = "/register";
+          }, 4000);
+        } else {
+          customToast({
+            severity: "error",
+            summary: "Invalid Email",
+            detail: "Please enter the email used to log in."
+          });
+        }
+      }
     } finally {
       window?.loadingEnd?.();
+      setIsSubmitting(false);
     }
   };
 
@@ -178,6 +211,7 @@ const Home = () => {
                           onChange={handleChange}
                           placeholder="Your Name"
                           required
+                          disabled={isSubmitting}
                         />
                       </Col>
                       <Col xs={12} md={6}>
@@ -188,6 +222,7 @@ const Home = () => {
                           onChange={handleChange}
                           placeholder="Your Email"
                           required
+                          disabled={isSubmitting}
                         />
                       </Col>
                     </Row>
@@ -211,6 +246,7 @@ const Home = () => {
                           maxLength={10}
                           pattern="[0-9]{10}"
                           title="Please enter a valid 10-digit phone number"
+                          disabled={isSubmitting}
                         />
                       </Col>
                       <Col xs={12} md={6}>
@@ -235,6 +271,7 @@ const Home = () => {
                           }}
                           placeholder="No. of Guests"
                           required
+                          disabled={isSubmitting}
                         />
                       </Col>
                     </Row>
@@ -246,6 +283,7 @@ const Home = () => {
                           value={formData.date}
                           onChange={handleChange}
                           required
+                          disabled={isSubmitting}
                         />
                       </Col>
                       <Col xs={12} md={6}>
@@ -255,6 +293,7 @@ const Home = () => {
                           value={formData.time}
                           onChange={handleChange}
                           required
+                          disabled={isSubmitting}
                         />
                       </Col>
                     </Row>
@@ -266,13 +305,15 @@ const Home = () => {
                       onChange={handleChange}
                       placeholder="Special requests (e.g., dietary needs, seating preference)"
                       className="mb-3"
+                      disabled={isSubmitting}
                     />
                     <Button
                       variant="warning"
                       type="submit"
                       className="w-100 fw-semibold text-white py-2"
+                      disabled={isSubmitting}
                     >
-                      Reserve Now
+                      {isSubmitting ? "Reserving..." : "Reserve Now"}
                     </Button>
                   </Form>
                 </div>

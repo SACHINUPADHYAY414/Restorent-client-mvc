@@ -32,3 +32,4 @@ export const TOKEN_EXPIRE="Your session has expired. Please log in again.";
 export const TRUE="true";
 export const WARNING="warning";
 export const WE_ARE_WORKING="We are working on it.";
+export const LOGOUT_SUCCESS="Logout successfull"

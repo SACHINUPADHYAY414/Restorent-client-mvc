@@ -77,30 +77,27 @@ function shuffleArray(array) {
 }
 
 const Gallery = () => {
-  const [activeTab, setActiveTab] = useState("All");
+  const [activeTab, setActiveTab] = useState("All Gallery");
   const [galleryItems, setGalleryItems] = useState([]);
   const [shuffledItems, setShuffledItems] = useState([]);
-  const [tabs, setTabs] = useState(["All"]);
-  const [error, setError] = useState(null);
+  const [tabs, setTabs] = useState(["All Gallery"]);
 
   useEffect(() => {
     async function fetchGallery() {
       try {
         window?.loadingStart?.();
-        const response = await api.fetch("/gallery");
-        if (!response.ok) throw new Error("Failed to fetch");
-
-        const data = await response.json();
+        const response = await api.get("/gallery/all");
+        const data = response.data;
         setGalleryItems(data);
         const types = Array.from(new Set(data.map((item) => item.type))).sort();
-        setTabs(["All", ...types]);
+        setTabs(["All Gallery", ...types]);
       } catch (err) {
-        setError(err?.message);
+        console.log(err?.message);
         setGalleryItems(galleryData);
         const types = Array.from(
           new Set(galleryData.map((item) => item.type))
         ).sort();
-        setTabs(["All", ...types]);
+        setTabs(["All Gallery", ...types]);
       } finally {
         window?.loadingEnd?.();
       }
@@ -110,14 +107,17 @@ const Gallery = () => {
 
   useEffect(() => {
     const filtered =
-      activeTab === "All"
+      activeTab === "All Gallery"
         ? galleryItems
         : galleryItems.filter((item) => item.type === activeTab);
     setShuffledItems(shuffleArray(filtered));
   }, [activeTab, galleryItems]);
 
   return (
-    <section className="about-section py-3 py-md-3">
+    <section
+      className="about-section py-3 py-md-3"
+      style={{ minHeight: "67.35vh" }}
+    >
       <div className="container">
         <div className="heading-wrapper text-center">
           <h2 className="background-text">Gallery</h2>
@@ -161,21 +161,23 @@ const Gallery = () => {
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="card h-100 shadow-sm border-0 rounded-4 overflow-hidden gallery-card">
+                <div className="card h-100 shadow-sm border-0 rounded-4 overflow-hidden gallery-card position-relative">
                   <img
                     src={image}
                     alt={title}
                     className="card-img-top"
                     style={{ height: "250px", objectFit: "cover" }}
                   />
+
+                  <div className="position-absolute top-0 end-0 m-2">
+                    <span className="badge bg-success text-white">{type}</span>
+                  </div>
+
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title fw-semibold">{title}</h5>
                     <p className="card-text text-muted small mb-2">
                       {description}
                     </p>
-                    <div className="mt-auto">
-                      <span className="badge bg-secondary">{type}</span>
-                    </div>
                   </div>
                 </div>
               </motion.div>
